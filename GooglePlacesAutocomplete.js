@@ -82,6 +82,7 @@ const GooglePlacesAutocomplete = React.createClass({
 
   propTypes: {
     placeholder: React.PropTypes.string,
+    token: React.PropTypes.string,
     placeholderTextColor: React.PropTypes.string,
     underlineColorAndroid: React.PropTypes.string,
     onPress: React.PropTypes.func,
@@ -330,6 +331,7 @@ const GooglePlacesAutocomplete = React.createClass({
 
       // fetch details
       const request = new XMLHttpRequest();
+      request.setRequestHeader("Authorization", this.props.token)
       this._requests.push(request);
       request.timeout = this.props.timeout;
       request.ontimeout = this.props.onTimeout;
@@ -514,6 +516,7 @@ const GooglePlacesAutocomplete = React.createClass({
     this._abortRequests();
     if (text.length >= this.props.minLength) {
       const request = new XMLHttpRequest();
+      request.setRequestHeader("Authorization", this.props.token)
       this._requests.push(request);
       request.timeout = this.props.timeout;
       request.ontimeout = this.props.onTimeout;
