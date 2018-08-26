@@ -121,6 +121,7 @@ const GooglePlacesAutocomplete = React.createClass({
   getDefaultProps() {
     return {
       placeholder: 'Search',
+      token: '',
       placeholderTextColor: '#A8A8A8',
       isRowScrollable: true,
       underlineColorAndroid: 'transparent',
