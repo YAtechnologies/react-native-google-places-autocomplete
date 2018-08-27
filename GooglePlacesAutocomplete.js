@@ -82,6 +82,7 @@ const GooglePlacesAutocomplete = React.createClass({
 
   propTypes: {
     placeholder: React.PropTypes.string,
+    baseUrl: React.PropTypes.string,
     token: React.PropTypes.string,
     placeholderTextColor: React.PropTypes.string,
     underlineColorAndroid: React.PropTypes.string,
@@ -121,6 +122,7 @@ const GooglePlacesAutocomplete = React.createClass({
   getDefaultProps() {
     return {
       placeholder: 'Search',
+      baseUrl: 'https://api.yassir.io/',
       token: '',
       placeholderTextColor: '#A8A8A8',
       isRowScrollable: true,
@@ -329,10 +331,8 @@ const GooglePlacesAutocomplete = React.createClass({
 
       // display loader
       this._enableRowLoader(rowData);
-
       // fetch details
       const request = new XMLHttpRequest();
-      request.setRequestHeader("Authorization", this.props.token)
       this._requests.push(request);
       request.timeout = this.props.timeout;
       request.ontimeout = this.props.onTimeout;
@@ -380,11 +380,12 @@ const GooglePlacesAutocomplete = React.createClass({
             this.props.onFail();
         }
       };
-      request.open('GET', 'https://api.yassir.io/public/api/v1/locations/places_details?' + Qs.stringify({
+      request.open('GET', `${this.props.baseUrl}/public/api/v1/locations/place_details?` + Qs.stringify({
             key: this.props.query.key,
             placeid: rowData.place_id,
             language: this.props.query.language,
           }));
+      request.setRequestHeader("Authorization", this.props.token);
       request.send();
     } else if (rowData.isCurrentLocation === true) {
 
@@ -517,7 +518,6 @@ const GooglePlacesAutocomplete = React.createClass({
     this._abortRequests();
     if (text.length >= this.props.minLength) {
       const request = new XMLHttpRequest();
-      request.setRequestHeader("Authorization", this.props.token)
       this._requests.push(request);
       request.timeout = this.props.timeout;
       request.ontimeout = this.props.onTimeout;
@@ -542,7 +542,9 @@ const GooglePlacesAutocomplete = React.createClass({
           // console.warn("google places autocomplete: request could not be completed or has been aborted");
         }
       };
-      request.open('GET', 'https://api.yassir.io/public/api/v1/locations/places?input=' + encodeURIComponent(text));
+
+      request.open('GET', `${this.props.baseUrl}/public/api/v1/locations/places_autocomplete?input=` + encodeURIComponent(text));
+      request.setRequestHeader("Authorization",this.props.token);
       request.send();
     } else {
       this._results = [];
